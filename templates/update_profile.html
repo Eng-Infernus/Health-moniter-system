@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+        <!-- Profile Header -->
+        <div class="md:flex md:items-center md:justify-between mb-8">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                    Update Profile
+                </h2>
+            </div>
+        </div>
+
+        <!-- Main Form -->
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <!-- Alert Messages -->
+                {% if messages %}
+                {% for message in messages %}
+                <div class="rounded-md {% if message.tags == 'success' %}bg-green-50{% else %}bg-red-50{% endif %} p-4 mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            {% if message.tags == 'success' %}
+                            <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            {% else %}
+                            <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            {% endif %}
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium {% if message.tags == 'success' %}text-green-800{% else %}text-red-800{% endif %}">
+                                {{ message }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <!-- Personal Information Section -->
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Personal Information</h3>
+                    <div class="grid grid-cols-6 gap-6">
+                        <div class="col-span-6 sm:col-span-3">
+                            <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                            <input type="tel" 
+                                   name="phone_number" 
+                                   id="phone_number" 
+                                   value="{{ patient.phone_number|default:'' }}"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-3">
+                            <label for="date_of_birth" class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                            <input type="date" 
+                                   name="date_of_birth" 
+                                   id="date_of_birth" 
+                                   value="{{ patient.date_of_birth|date:'Y-m-d' }}"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="address" class="block text-sm font-medium text-gray-700">Street Address</label>
+                            <input type="text" 
+                                   name="address" 
+                                   id="address" 
+                                   value="{{ patient.address|default:'' }}"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-2">
+                            <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                            <input type="text" 
+                                   name="city" 
+                                   id="city" 
+                                   value="{{ patient.city|default:'' }}"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-2">
+                            <label for="state" class="block text-sm font-medium text-gray-700">State</label>
+                            <input type="text" 
+                                   name="state" 
+                                   id="state" 
+                                   value="{{ patient.state|default:'' }}"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-2">
+                            <label for="zip_code" class="block text-sm font-medium text-gray-700">ZIP Code</label>
+                            <input type="text" 
+                                   name="zip_code" 
+                                   id="zip_code" 
+                                   value="{{ patient.zip_code|default:'' }}"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-3">
+                            <label for="blood_type" class="block text-sm font-medium text-gray-700">Blood Type</label>
+                            <select id="blood_type" 
+                                    name="blood_type" 
+                                    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                <option value="">Select blood type</option>
+                                {% for blood_type, label in blood_type_choices %}
+                                <option value="{{ blood_type }}" {% if patient.blood_type == blood_type %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Health Conditions -->
+                    <div class="mt-6">
+                        <label for="health_conditions" class="block text-sm font-medium text-gray-700">
+                            Health Conditions & Allergies
+                        </label>
+                        <div class="mt-1">
+                            <textarea id="health_conditions" 
+                                      name="health_conditions" 
+                                      rows="3"
+                                      class="shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
+                                      placeholder="List any chronic conditions, allergies, or other health concerns">{{ patient.health_conditions|default:'' }}</textarea>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500">
+                            Please include any chronic conditions, allergies, medications, or other important health information.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Emergency Contact Section -->
+                <div class="px-4 py-5 bg-gray-50 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Emergency Contact</h3>
+                    <div class="grid grid-cols-6 gap-6">
+                        <div class="col-span-6 sm:col-span-3">
+                            <label for="emergency_contact_name" class="block text-sm font-medium text-gray-700">Contact Name</label>
+                            <input type="text" 
+                                   name="emergency_contact_name" 
+                                   id="emergency_contact_name" 
+                                   value="{{ patient.emergency_contact_name|default:'' }}"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-3">
+                            <label for="emergency_contact_phone" class="block text-sm font-medium text-gray-700">Contact Phone</label>
+                            <input type="tel" 
+                                   name="emergency_contact_phone" 
+                                   id="emergency_contact_phone" 
+                                   value="{{ patient.emergency_contact_phone|default:'' }}"
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="emergency_contact_relationship" class="block text-sm font-medium text-gray-700">Relationship</label>
+                            <select id="emergency_contact_relationship" 
+                                    name="emergency_contact_relationship" 
+                                    class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                <option value="">Select relationship</option>
+                                <option value="spouse" {% if patient.emergency_contact_relationship == 'spouse' %}selected{% endif %}>Spouse</option>
+                                <option value="parent" {% if patient.emergency_contact_relationship == 'parent' %}selected{% endif %}>Parent</option>
+                                <option value="child" {% if patient.emergency_contact_relationship == 'child' %}selected{% endif %}>Child</option>
+                                <option value="sibling" {% if patient.emergency_contact_relationship == 'sibling' %}selected{% endif %}>Sibling</option>
+                                <option value="friend" {% if patient.emergency_contact_relationship == 'friend' %}selected{% endif %}>Friend</option>
+                                <option value="other" {% if patient.emergency_contact_relationship == 'other' %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                    <button type="submit"
+                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Phone number formatting
+    function formatPhoneNumber(input) {
+        let value = input.value.replace(/\D/g, '');
+        if (value.length > 0) {
+            if (value.length <= 4) {
+                input.value = value;
+            } else if (value.length <= 8) {
+                input.value = `${value.slice(0, 4)}-${value.slice(4)}`;
+            } else {
+                input.value = `${value.slice(0, 4)}-${value.slice(4, 8)}`;
+            }
+        }
+    }
+
+    // Add event listeners for phone number fields
+    document.getElementById('phone_number').addEventListener('input', function(e) {
+        formatPhoneNumber(e.target);
+    });
+
+    document.getElementById('emergency_contact_phone').addEventListener('input', function(e) {
+        formatPhoneNumber(e.target);
+    });
+
+    // ZIP code validation
+    document.getElementById('zip_code').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 5);
+    });
+</script>
+{% endblock %}

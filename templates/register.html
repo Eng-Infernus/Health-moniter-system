@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Create your patient account
+        </h2>
+        <p class="mt-2 text-center text-sm text-gray-600">
+            Already have an account?
+            <a href="{% url 'login' %}" class="font-medium text-blue-600 hover:text-blue-500">
+                Sign in
+            </a>
+        </p>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <form class="space-y-6" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="user_type" value="patient">
+
+                {% if messages %}
+                <div class="rounded-md bg-red-50 p-4">
+                    <div class="flex">
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">
+                                {% for message in messages %}
+                                    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                                {% endfor %}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Username Field -->
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700">
+                        Username
+                    </label>
+                    <div class="mt-1">
+                        <input type="text" 
+                               name="username" 
+                               id="username"
+                               required
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                               value="{{ form.username.value|default:'' }}">
+                    </div>
+                    {% if form.username.errors %}
+                    <p class="mt-2 text-sm text-red-600">
+                        {{ form.username.errors.0 }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- First Name Field -->
+                <div>
+                    <label for="first_name" class="block text-sm font-medium text-gray-700">
+                        First Name
+                    </label>
+                    <div class="mt-1">
+                        <input type="text" 
+                               name="first_name" 
+                               id="first_name"
+                               required
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                               value="{{ form.first_name.value|default:'' }}">
+                    </div>
+                    {% if form.first_name.errors %}
+                    <p class="mt-2 text-sm text-red-600">
+                        {{ form.first_name.errors.0 }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Last Name Field -->
+                <div>
+                    <label for="last_name" class="block text-sm font-medium text-gray-700">
+                        Last Name
+                    </label>
+                    <div class="mt-1">
+                        <input type="text" 
+                               name="last_name" 
+                               id="last_name"
+                               required
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                               value="{{ form.last_name.value|default:'' }}">
+                    </div>
+                    {% if form.last_name.errors %}
+                    <p class="mt-2 text-sm text-red-600">
+                        {{ form.last_name.errors.0 }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Email Field -->
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">
+                        Email address
+                    </label>
+                    <div class="mt-1">
+                        <input type="email" 
+                               name="email" 
+                               id="email"
+                               autocomplete="email"
+                               required
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                               value="{{ form.email.value|default:'' }}">
+                    </div>
+                    {% if form.email.errors %}
+                    <p class="mt-2 text-sm text-red-600">
+                        {{ form.email.errors.0 }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Password Field -->
+                <div>
+                    <label for="password1" class="block text-sm font-medium text-gray-700">
+                        Password
+                    </label>
+                    <div class="mt-1">
+                        <input type="password" 
+                               name="password1" 
+                               id="password1"
+                               required
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    {% if form.password1.errors %}
+                    <p class="mt-2 text-sm text-red-600">
+                        {{ form.password1.errors.0 }}
+                    </p>
+                    {% endif %}
+                    <p class="mt-1 text-sm text-gray-500">
+                        Must be at least 8 characters and include a number
+                    </p>
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div>
+                    <label for="password2" class="block text-sm font-medium text-gray-700">
+                        Confirm Password
+                    </label>
+                    <div class="mt-1">
+                        <input type="password" 
+                               name="password2" 
+                               id="password2"
+                               required
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    {% if form.password2.errors %}
+                    <p class="mt-2 text-sm text-red-600">
+                        {{ form.password2.errors.0 }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="flex items-center">
+                    <input type="checkbox" 
+                           name="terms" 
+                           id="terms"
+                           required
+                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="terms" class="ml-2 block text-sm text-gray-900">
+                        I agree to the 
+{#                        <a href="{% url 'terms' %}" class="font-medium text-blue-600 hover:text-blue-500">#}
+                            Terms and Conditions
+{#                        </a>#}
+                        and
+{#                        <a href="{% url 'privacy' %}" class="font-medium text-blue-600 hover:text-blue-500">#}
+                            Privacy Policy
+{#                        </a>#}
+                    </label>
+                </div>
+
+                <div class="mt-6">
+                    <button type="submit"
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Create Patient Account
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Password strength indicator
+    document.getElementById('password1').addEventListener('input', function(e) {
+        const password = e.target.value;
+        const hasNumber = /\d/.test(password);
+        const hasMinLength = password.length >= 8;
+        
+        if (hasNumber && hasMinLength) {
+            e.target.classList.remove('border-red-300');
+            e.target.classList.add('border-green-300');
+        } else {
+            e.target.classList.remove('border-green-300');
+            e.target.classList.add('border-red-300');
+        }
+    });
+
+    // Password match validation
+    document.getElementById('password2').addEventListener('input', function(e) {
+        const password1 = document.getElementById('password1').value;
+        const password2 = e.target.value;
+        
+        if (password1 === password2) {
+            e.target.classList.remove('border-red-300');
+            e.target.classList.add('border-green-300');
+        } else {
+            e.target.classList.remove('border-green-300');
+            e.target.classList.add('border-red-300');
+        }
+    });
+</script>
+{% endblock %}

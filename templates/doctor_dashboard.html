@@ -1,0 +1,68 @@
+<!-- templates/doctor_dashboard.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Today's Appointments -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4">Today's Appointments</h2>
+        {% if today_appointments %}
+            <div class="space-y-4">
+                {% for appointment in today_appointments %}
+                    <div class="border rounded-lg p-4">
+                        <p class="font-medium">{{ appointment.patient.user.get_full_name }}</p>
+                        <p class="text-gray-600">{{ appointment.date_time|date:"g:i a" }}</p>
+                        <p class="text-gray-600">Reason: {{ appointment.reason }}</p>
+                        <div class="mt-2">
+                            <a href="{% url 'view_patient' appointment.patient.id %}" class="text-blue-600 hover:text-blue-500">View Patient Details</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-600">No appointments scheduled for today</p>
+        {% endif %}
+    </div>
+
+    <!-- My Patients -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4">My Patients</h2>
+        {% if patients %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for patient in patients %}
+                    <div class="border rounded-lg p-4">
+                        <p class="font-medium">{{ patient.user.get_full_name }}</p>
+                        <p class="text-sm text-gray-600">Health Conditions: {{ patient.health_conditions }}</p>
+                        <div class="mt-2 space-x-2">
+                            <a href="{% url 'view_patient' patient.id %}" class="text-blue-600 hover:text-blue-500">View Details</a>
+                            <a href="{% url 'prescribe_medication' patient.id %}" class="text-green-600 hover:text-green-500">Prescribe</a>
+                            <a href="{% url 'schedule_appointment' patient.id %}" class="text-purple-600 hover:text-purple-500">Schedule</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-600">No patients assigned</p>
+        {% endif %}
+    </div>
+
+    <!-- Recent Prescriptions -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-4">Recent Prescriptions</h2>
+        {% if recent_prescriptions %}
+            <div class="space-y-4">
+                {% for prescription in recent_prescriptions %}
+                    <div class="border rounded-lg p-4">
+                        <p class="font-medium">{{ prescription.patient.user.get_full_name }}</p>
+                        <p class="text-gray-600">Medication: {{ prescription.medication }}</p>
+                        <p class="text-gray-600">Dosage: {{ prescription.dosage }}</p>
+                        <p class="text-gray-600">Prescribed: {{ prescription.start_date }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-600">No recent prescriptions</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

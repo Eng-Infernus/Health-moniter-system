@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">Medical Records</h2>
+
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <!-- Basic Information -->
+            <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    Patient Information
+                </h3>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500">
+                    Personal details and appointment history
+                </p>
+            </div>
+
+            <!-- Patient Details -->
+            <div class="border-t border-gray-200">
+                <dl>
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Full name</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ patient.user.get_full_name }}
+                        </dd>
+                    </div>
+                    <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Patient ID</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ patient.id }}
+                        </dd>
+                    </div>
+                    {% if patient.health_conditions %}
+                    <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt class="text-sm font-medium text-gray-500">Health Conditions</dt>
+                        <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                            {{ patient.health_conditions|linebreaks }}
+                        </dd>
+                    </div>
+                    {% endif %}
+                </dl>
+            </div>
+
+            <!-- Past Appointments -->
+            <div class="px-4 py-5 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    Past Appointments
+                </h3>
+            </div>
+
+            <div class="border-t border-gray-200">
+                {% if past_appointments %}
+                <div class="overflow-hidden">
+                    <ul class="divide-y divide-gray-200">
+                        {% for appointment in past_appointments %}
+                        <li class="px-4 py-4 sm:px-6 hover:bg-gray-50">
+                            <div class="flex items-center justify-between">
+                                <div class="sm:flex sm:items-center sm:justify-between w-full">
+                                    <div>
+                                        <div class="flex items-center">
+                                            <p class="text-sm font-medium text-gray-900">
+                                                {{ appointment.date_time|date:"F j, Y" }} at {{ appointment.date_time|time:"g:i A" }}
+                                            </p>
+                                        </div>
+                                        <div class="mt-2">
+                                            <p class="text-sm text-gray-500">
+                                                Dr. {{ appointment.doctor.user.get_full_name }}
+                                            </p>
+                                            {% if appointment.reason %}
+                                            <p class="mt-1 text-sm text-gray-500">
+                                                Reason: {{ appointment.reason }}
+                                            </p>
+                                            {% endif %}
+                                            {% if appointment.notes %}
+                                            <p class="mt-2 text-sm text-gray-700">
+                                                Notes: {{ appointment.notes }}
+                                            </p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% else %}
+                <div class="px-4 py-5 sm:px-6">
+                    <p class="text-sm text-gray-500">No past appointments found.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

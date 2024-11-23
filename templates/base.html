@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <a href="{% url 'doctor_dashboard' %}" class="font-bold text-xl">Healthcare Portal</a>
+                {% if user.is_authenticated %}
+                    <div class="space-x-4">
+                        {% if is_doctor %}
+                            <a href="{% url 'doctor_dashboard' %}" class="hover:text-blue-200">Dashboard</a>
+                        {% else %}
+                            <a href="{% url 'patient_dashboard' %}" class="hover:text-blue-200">Dashboard</a>
+                        {% endif %}
+                        <a href="{% url 'logout' %}" class="hover:text-blue-200">Logout</a>
+                    </div>
+                {% else %}
+                    <div class="space-x-4">
+                        <a href="{% url 'login' %}" class="hover:text-blue-200">Login</a>
+                        <a href="{% url 'register' %}" class="hover:text-blue-200">Register</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mx-auto px-4 mt-4">
+        {% for message in messages %}
+            <div class="p-4 rounded-lg {% if message.tags == 'error' %}bg-red-100 text-red-700{% elif message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-blue-100 text-blue-700{% endif %} mb-4">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Content -->
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
