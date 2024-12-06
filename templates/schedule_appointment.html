@@ -2,88 +2,90 @@
 
 {% block content %}
 <div class="min-h-screen bg-gray-50 py-8">
-    <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-        <h2 class="text-2xl font-bold text-gray-900 mb-8">Schedule Appointment</h2>
+   <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+       <h2 class="text-2xl font-bold text-gray-900 mb-8">Schedule Appointment</h2>
 
-        {% if messages %}
-        {% for message in messages %}
-        <div class="mb-4 rounded-md {% if message.tags == 'success' %}bg-green-50{% else %}bg-red-50{% endif %} p-4">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    {% if message.tags == 'success' %}
-                    <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    {% else %}
-                    <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    {% endif %}
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium {% if message.tags == 'success' %}text-green-800{% else %}text-red-800{% endif %}">
-                        {{ message }}
-                    </p>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-        {% endif %}
+       {% if messages %}
+       {% for message in messages %}
+       <div class="mb-4 rounded-md {% if message.tags == 'success' %}bg-green-50{% else %}bg-red-50{% endif %} p-4">
+           <div class="flex">
+               <div class="flex-shrink-0">
+                   {% if message.tags == 'success' %}
+                   <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                   </svg>
+                   {% else %}
+                   <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                   </svg>
+                   {% endif %}
+               </div>
+               <div class="ml-3">
+                   <p class="text-sm font-medium {% if message.tags == 'success' %}text-green-800{% else %}text-red-800{% endif %}">
+                       {{ message }}
+                   </p>
+               </div>
+           </div>
+       </div>
+       {% endfor %}
+       {% endif %}
 
-        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-            <form method="POST" class="space-y-6">
-                {% csrf_token %}
-                <div class="px-4 py-5 sm:p-6">
-                    <!-- Doctor Selection -->
-                    <div class="mb-6">
-                        <label for="doctor" class="block text-sm font-medium text-gray-700">Select Doctor</label>
-                        <select id="doctor" 
-                                name="doctor" 
-                                required
-                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                            <option value="">Choose a doctor</option>
-                            {% for doctor in doctors %}
-                            <option value="{{ doctor.id }}">Dr. {{ doctor.user.get_full_name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+       <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+           <form method="POST" class="space-y-6">
+               {% csrf_token %}
+               <div class="px-4 py-5 sm:p-6">
+                   {% if not is_doctor_scheduling %}
+                   <!-- Doctor Selection - Only show if patient is scheduling -->
+                   <div class="mb-6">
+                       <label for="doctor" class="block text-sm font-medium text-gray-700">Select Doctor</label>
+                       <select id="doctor" 
+                               name="doctor" 
+                               required
+                               class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                           <option value="">Choose a doctor</option>
+                           {% for doctor in doctors %}
+                           <option value="{{ doctor.id }}">Dr. {{ doctor.user.get_full_name }}</option>
+                           {% endfor %}
+                       </select>
+                   </div>
+                   {% endif %}
 
-                    <!-- Date and Time Selection -->
-                    <div class="mb-6">
-                        <label for="date_time" class="block text-sm font-medium text-gray-700">Select Date and Time</label>
-                        <select id="date_time" 
-                                name="date_time" 
-                                required
-                                class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                            <option value="">Choose a time slot</option>
-                            {% for slot in time_slots %}
-                            <option value="{{ slot.formatted }}">
-                                {{ slot.datetime|date:"l, F j" }} at {{ slot.datetime|time:"g:i A" }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                   <!-- Date and Time Selection -->
+                   <div class="mb-6">
+                       <label for="date_time" class="block text-sm font-medium text-gray-700">Select Date and Time</label>
+                       <select id="date_time" 
+                               name="date_time" 
+                               required
+                               class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                           <option value="">Choose a time slot</option>
+                           {% for slot in time_slots %}
+                           <option value="{{ slot.formatted }}">
+                               {{ slot.datetime|date:"l, F j" }} at {{ slot.datetime|time:"g:i A" }}
+                           </option>
+                           {% endfor %}
+                       </select>
+                   </div>
 
-                    <!-- Reason for Visit -->
-                    <div>
-                        <label for="reason" class="block text-sm font-medium text-gray-700">Reason for Visit</label>
-                        <textarea id="reason" 
-                                  name="reason" 
-                                  rows="3"
-                                  required
-                                  class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                  placeholder="Please describe your reason for visiting"></textarea>
-                    </div>
-                </div>
+                   <!-- Reason for Visit -->
+                   <div>
+                       <label for="reason" class="block text-sm font-medium text-gray-700">Reason for Visit</label>
+                       <textarea id="reason" 
+                                 name="reason" 
+                                 rows="3"
+                                 required
+                                 class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                 placeholder="Please describe your reason for visiting"></textarea>
+                   </div>
+               </div>
 
-                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                    <button type="submit"
-                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Schedule Appointment
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+               <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                   <button type="submit"
+                           class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                       Schedule Appointment
+                   </button>
+               </div>
+           </form>
+       </div>
+   </div>
 </div>
 {% endblock %}

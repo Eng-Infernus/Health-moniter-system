@@ -68,7 +68,7 @@ TEMPLATES = [
         },
     },
 ]
-
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 WSGI_APPLICATION = 'doctor_patient_web.wsgi.application'
 
 

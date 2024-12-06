@@ -1,68 +1,219 @@
-<!-- templates/doctor_dashboard.html -->
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="space-y-6">
-    <!-- Today's Appointments -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-bold mb-4">Today's Appointments</h2>
-        {% if today_appointments %}
-            <div class="space-y-4">
-                {% for appointment in today_appointments %}
-                    <div class="border rounded-lg p-4">
-                        <p class="font-medium">{{ appointment.patient.user.get_full_name }}</p>
-                        <p class="text-gray-600">{{ appointment.date_time|date:"g:i a" }}</p>
-                        <p class="text-gray-600">Reason: {{ appointment.reason }}</p>
-                        <div class="mt-2">
-                            <a href="{% url 'view_patient' appointment.patient.id %}" class="text-blue-600 hover:text-blue-500">View Patient Details</a>
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="md:flex md:items-center md:justify-between mb-8">
+            <div class="flex-1 min-w-0">
+                <h2 class="text-2xl font-bold text-gray-900">
+                    Welcome, Dr. {{ doctor.user.first_name }} {{ doctor.user.last_name }}
+                </h2>
+                <p class="mt-1 text-sm text-gray-500">
+                    Specialty: {{ doctor.specialty }} | Experience: {{ doctor.experience }} years
+                </p>
+            </div>
+        </div>
+            <div class="md:flex md:items-center md:justify-between mb-8">
+
+        <a href="{% url 'doctor_schedule_slots' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Manage Schedule
+        </a>
+            </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8">
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Total Patients</dt>
+                                <dd class="text-3xl font-semibold text-gray-900">{{ patients.count }}</dd>
+                            </dl>
                         </div>
                     </div>
-                {% endfor %}
+                </div>
             </div>
-        {% else %}
-            <p class="text-gray-600">No appointments scheduled for today</p>
-        {% endif %}
-    </div>
 
-    <!-- My Patients -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-bold mb-4">My Patients</h2>
-        {% if patients %}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-5 w-0 flex-1">
+                            <dl>
+                                <dt class="text-sm font-medium text-gray-500 truncate">Today's Appointments</dt>
+                                <dd class="text-3xl font-semibold text-gray-900">
+                                    {{ upcoming_appointments|length }}
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Appointments -->
+        <!-- Upcoming Appointments Section -->
+<div class="bg-white shadow overflow-hidden sm:rounded-md mb-8">
+    <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+            Upcoming Appointments
+        </h3>
+    </div>
+    <ul class="divide-y divide-gray-200">
+        {% if upcoming_appointments %}
+            {% for appointment in upcoming_appointments %}
+            <li>
+                <div class="px-4 py-4 sm:px-6">
+                    <div class="flex items-center justify-between">
+                        <div class="sm:flex sm:items-center">
+                            <a href="{% url 'view_patient_details' appointment.patient.id %}" class="hover:underline">
+                                <p class="text-sm font-medium text-blue-600 truncate">
+                                    {{ appointment.patient.user.first_name }} {{ appointment.patient.user.last_name }}
+                                </p>
+                            </a>
+                            <div class="mt-2 sm:mt-0 sm:ml-6">
+                                <div class="flex items-center text-sm text-gray-500">
+                                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    {{ appointment.date_time|date:"F j, Y" }} at {{ appointment.date_time|time:"g:i A" }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 sm:mt-0">
+                            {% if patient.id %}  <!-- or just if patient -->
+                                <a href="{% url 'add_prescription' patient.id %}" 
+                                   class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded">
+                                    Add Prescription
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if appointment.reason %}
+                    <div class="mt-2">
+                        <p class="text-sm text-gray-500">Reason: {{ appointment.reason }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        {% else %}
+        <li class="px-4 py-4 sm:px-6 text-sm text-gray-500">
+            No upcoming appointments
+        </li>
+        {% endif %}
+    </ul>
+</div>
+
+        <!-- Patient List -->
+        <div class="bg-white shadow overflow-hidden sm:rounded-md">
+            <div class="px-4 py-5 border-b border-gray-200 sm:px-6 flex justify-between items-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                    My Patients
+                </h3>
+                <button id="addPatientBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    Add New Patient
+                </button>
+            </div>
+
+            <!-- Modal for adding patients -->
+            <div id="addPatientModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+                <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                    <h3 class="text-lg font-bold mb-4">Add New Patient</h3>
+                    <div class="mt-4">
+                        {% if all_patients %}
+                            {% for patient in all_patients %}
+                            <div class="flex justify-between items-center py-2">
+                                <span>{{ patient.user.first_name }} {{ patient.user.last_name }}</span>
+                                <form method="POST" action="{% url 'add_remove_patient' patient.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="add">
+                                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">
+                                        Add
+                                    </button>
+                                </form>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-gray-500">No available patients to add</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <ul class="divide-y divide-gray-200">
                 {% for patient in patients %}
-                    <div class="border rounded-lg p-4">
-                        <p class="font-medium">{{ patient.user.get_full_name }}</p>
-                        <p class="text-sm text-gray-600">Health Conditions: {{ patient.health_conditions }}</p>
-                        <div class="mt-2 space-x-2">
-                            <a href="{% url 'view_patient' patient.id %}" class="text-blue-600 hover:text-blue-500">View Details</a>
-                            <a href="{% url 'prescribe_medication' patient.id %}" class="text-green-600 hover:text-green-500">Prescribe</a>
-                            <a href="{% url 'schedule_appointment' patient.id %}" class="text-purple-600 hover:text-purple-500">Schedule</a>
+                <li>
+                    <div class="px-4 py-4 sm:px-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <a href="{% url 'view_patient_details' patient.id %}" class="hover:underline">
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-blue-600">
+                                            {{ patient.user.first_name }} {{ patient.user.last_name }}
+                                    </p>
+                                    <p class="text-sm text-gray-500">
+                                        ID: {{ patient.id }}
+                                    </p>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="flex space-x-2">
+                                <a href="{% url 'add_prescription' patient.id %}"
+                                   class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded">
+                                    Add Prescription
+                                </a>
+                                <a href="{% url 'doctor_schedule_appointment' %}?patient={{ patient.id }}"
+                                   class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                                    Schedule Appointment
+                                </a>
+                                <form method="POST" action="{% url 'add_remove_patient' patient.id %}" class="inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="remove">
+                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">
+                                        Remove
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p class="text-gray-600">No patients assigned</p>
-        {% endif %}
-    </div>
 
-    <!-- Recent Prescriptions -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-bold mb-4">Recent Prescriptions</h2>
-        {% if recent_prescriptions %}
-            <div class="space-y-4">
-                {% for prescription in recent_prescriptions %}
-                    <div class="border rounded-lg p-4">
-                        <p class="font-medium">{{ prescription.patient.user.get_full_name }}</p>
-                        <p class="text-gray-600">Medication: {{ prescription.medication }}</p>
-                        <p class="text-gray-600">Dosage: {{ prescription.dosage }}</p>
-                        <p class="text-gray-600">Prescribed: {{ prescription.start_date }}</p>
-                    </div>
+                </li>
+                                                           
+
+                {% empty %}
+                <li class="px-4 py-4 sm:px-6 text-sm text-gray-500">
+                    No patients assigned yet
+                </li>
                 {% endfor %}
-            </div>
-        {% else %}
-            <p class="text-gray-600">No recent prescriptions</p>
-        {% endif %}
+            </ul>
+        </div>
     </div>
 </div>
+
+<script>
+    const addPatientBtn = document.getElementById('addPatientBtn');
+    const addPatientModal = document.getElementById('addPatientModal');
+
+    addPatientBtn.onclick = function() {
+        addPatientModal.classList.remove('hidden');
+    }
+
+    addPatientModal.onclick = function(e) {
+        if (e.target === addPatientModal) {
+            addPatientModal.classList.add('hidden');
+        }
+    }
+</script>
 {% endblock %}

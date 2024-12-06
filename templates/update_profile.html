@@ -74,32 +74,32 @@
                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                         </div>
 
-                        <div class="col-span-6 sm:col-span-2">
-                            <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                            <input type="text" 
-                                   name="city" 
-                                   id="city" 
-                                   value="{{ patient.city|default:'' }}"
-                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
-
-                        <div class="col-span-6 sm:col-span-2">
-                            <label for="state" class="block text-sm font-medium text-gray-700">State</label>
-                            <input type="text" 
-                                   name="state" 
-                                   id="state" 
-                                   value="{{ patient.state|default:'' }}"
-                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
-
-                        <div class="col-span-6 sm:col-span-2">
-                            <label for="zip_code" class="block text-sm font-medium text-gray-700">ZIP Code</label>
-                            <input type="text" 
-                                   name="zip_code" 
-                                   id="zip_code" 
-                                   value="{{ patient.zip_code|default:'' }}"
-                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
+{#                        <div class="col-span-6 sm:col-span-2">#}
+{#                            <label for="city" class="block text-sm font-medium text-gray-700">City</label>#}
+{#                            <input type="text" #}
+{#                                   name="city" #}
+{#                                   id="city" #}
+{#                                   value="{{ patient.city|default:'' }}"#}
+{#                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-span-6 sm:col-span-2">#}
+{#                            <label for="state" class="block text-sm font-medium text-gray-700">State</label>#}
+{#                            <input type="text" #}
+{#                                   name="state" #}
+{#                                   id="state" #}
+{#                                   value="{{ patient.state|default:'' }}"#}
+{#                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-span-6 sm:col-span-2">#}
+{#                            <label for="zip_code" class="block text-sm font-medium text-gray-700">ZIP Code</label>#}
+{#                            <input type="text" #}
+{#                                   name="zip_code" #}
+{#                                   id="zip_code" #}
+{#                                   value="{{ patient.zip_code|default:'' }}"#}
+{#                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">#}
+{#                        </div>#}
 
                         <div class="col-span-6 sm:col-span-3">
                             <label for="blood_type" class="block text-sm font-medium text-gray-700">Blood Type</label>
@@ -126,7 +126,7 @@
                                       name="health_conditions" 
                                       rows="3"
                                       class="shadow-sm focus:ring-blue-500 focus:border-blue-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
-                                      placeholder="List any chronic conditions, allergies, or other health concerns">{{ patient.health_conditions|default:'' }}</textarea>
+                                      placeholder="List any chronic conditions, allergies, or other health concerns">{{ patient.health_conditions|default:'' }} </textarea>
                         </div>
                         <p class="mt-2 text-sm text-gray-500">
                             Please include any chronic conditions, allergies, medications, or other important health information.

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">Add Prescription for {{ patient.user.get_full_name }}</h2>
+
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+                <div class="px-4 py-5 sm:p-6">
+                    <div class="grid grid-cols-6 gap-6">
+                        <div class="col-span-6">
+                            <label for="medication" class="block text-sm font-medium text-gray-700">Medication</label>
+                            <input type="text" 
+                                   name="medication" 
+                                   id="medication"
+                                   required
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-3">
+                            <label for="dosage" class="block text-sm font-medium text-gray-700">Dosage</label>
+                            <input type="text" 
+                                   name="dosage" 
+                                   id="dosage"
+                                   required
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+
+                        <div class="col-span-6 sm:col-span-3">
+                            <label for="frequency" class="block text-sm font-medium text-gray-700">Frequency</label>
+                            <select name="frequency" 
+                                    id="frequency"
+                                    required
+                                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                {% for value, label in frequency_choices %}
+                                    <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-span-6">
+                            <label for="duration" class="block text-sm font-medium text-gray-700">Duration</label>
+                            <input type="text" 
+                                   name="duration" 
+                                   id="duration"
+                                   required
+                                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                    <button type="submit"
+                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Add Prescription
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

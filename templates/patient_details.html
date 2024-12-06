@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <div class="px-4 py-5 border-b border-gray-200">
+                <h3 class="text-lg font-medium text-gray-900">
+                    {{ patient.user.first_name }} {{ patient.user.last_name }}
+                </h3>
+                <p class="mt-1 text-sm text-gray-500">Patient ID: {{ patient.id }}</p>
+            </div>
+
+            <!-- Medical Information -->
+            <div class="px-4 py-5">
+                <h4 class="text-md font-medium text-gray-900 mb-4">Medical Information</h4>
+                <div class="space-y-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Health Conditions</p>
+                        <p class="mt-1">{{ patient.health_conditions|default:"No health conditions listed" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-500">Blood Type</p>
+                        <p class="mt-1">{{ patient.blood_type|default:"Not specified" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prescriptions -->
+            <div class="px-4 py-5 border-t border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-md font-medium text-gray-900">Prescriptions</h4>
+                    <a href="{% url 'add_prescription' patient.id %}" 
+                       class="bg-blue-500 text-white px-4 py-2 rounded-md text-sm">
+                        Add Prescription
+                    </a>
+                </div>
+                <div class="space-y-4">
+                    {% for prescription in prescriptions %}
+                    <div class="border rounded-lg p-4">
+                        <p class="font-medium">{{ prescription.medication }}</p>
+                        <p class="text-sm text-gray-500">Dosage: {{ prescription.dosage }}</p>
+                        <p class="text-sm text-gray-500">Frequency: {{ prescription.get_frequency_display }}</p>
+                        <p class="text-sm text-gray-500">Duration: {{ prescription.duration }}</p>
+                        <p class="text-sm text-gray-500">Prescribed: {{ prescription.date_prescribed|date }}</p>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-500">No prescriptions</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Appointment History -->
+            <div class="px-4 py-5 border-t border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-md font-medium text-gray-900">Appointment History</h4>
+                    <a href="{% url 'doctor_schedule_appointment' %}?patient={{ patient.id }}" 
+                       class="bg-green-500 text-white px-4 py-2 rounded-md text-sm">
+                        Schedule Appointment
+                    </a>
+                </div>
+                {% for appointment in appointments %}
+                <div class="border-b py-3">
+                    <p class="font-medium">{{ appointment.date_time|date:"F j, Y" }} at {{ appointment.date_time|time:"g:i A" }}</p>
+                    <p class="text-sm text-gray-500">Reason: {{ appointment.reason }}</p>
+                    {% if appointment.notes %}
+                    <p class="text-sm text-gray-500">Notes: {{ appointment.notes }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -4,16 +4,37 @@
 {% block content %}
 <div class="space-y-6">
     <!-- Patient Info -->
+<div class="space-y-6">
+    <!-- Patient Info -->
     <div class="bg-white rounded-lg shadow-md p-6">
         <h2 class="text-xl font-bold mb-4">Personal Information</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
+            
                 <p class="text-gray-600">Emergency Contact</p>
-                <p class="font-medium">{{ patient.emergency_contact }}</p>
+                <p class="font-medium">
+                    {% if patient.emergency_contact_name %}
+                        {{ patient.emergency_contact_name }} ({{ patient.emergency_contact_relationship }})
+                        <br>{{ patient.emergency_contact_phone }}
+                    {% else %}
+                        No emergency contact provided
+                    {% endif %}
+                </p>
             </div>
             <div>
                 <p class="text-gray-600">Health Conditions</p>
-                <p class="font-medium">{{ patient.health_conditions }}</p>
+                <p class="font-medium">{{ patient.health_conditions|default:"No health conditions listed" }}</p>
+            </div>
+            {% if patient.blood_type %}
+            <div>
+                <p class="text-gray-600">Blood Type</p>
+                <p class="font-medium">{{ patient.blood_type }}</p>
+            </div>
+            {% endif %}
+            <div class="flex justify mb-6 space-x-4">
+                <a href="{% url 'patient_profile' %}" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md">
+                    View Profile
+                </a>
             </div>
         </div>
     </div>
@@ -46,10 +67,10 @@
                         <p class="font-medium">{{ prescription.medication }}</p>
                         <p class="text-gray-600">Dosage: {{ prescription.dosage }}</p>
                         <p class="text-gray-600">Prescribed by: Dr. {{ prescription.doctor.user.get_full_name }}</p>
-                        <p class="text-gray-600">Start Date: {{ prescription.start_date }}</p>
-                        {% if prescription.end_date %}
-                            <p class="text-gray-600">End Date: {{ prescription.end_date }}</p>
-                        {% endif %}
+                        <p class="text-gray-600">Start Date: {{ prescription.date_prescribed }}</p>
+{#                        {% if prescription.end_date %}#}
+                        <p class="text-gray-600">End Date: {{ prescription.end_date   }}</p>
+{#                        {% endif %}#}
                     </div>
                 {% endfor %}
             </div>
@@ -57,5 +78,6 @@
             <p class="text-gray-600">No current prescriptions</p>
         {% endif %}
     </div>
+</div>
 </div>
 {% endblock %}
